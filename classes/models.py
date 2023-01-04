@@ -1,36 +1,23 @@
-from config_reader import config
-from peewee import *
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import mapped_column
 
-class BaseModel(Model):
-    class Meta:
-        database = SqliteDatabase(config.get("DB_NAME"))
+class Base(DeclarativeBase):
+    pass
 
-class SuperAdmin(BaseModel):
-    """SQL table that contains SuperAdmin user for telegram
-
-    Args:
-        id: int id user
-        name: str admin name
-    """
-    id = PrimaryKeyField(null=False)
-    name = CharField()
-
-class Admin(BaseModel):
-    """SQL table that contains admin user for telegram
+class Users(Base):
+    """SQL table that contains users for telegram
 
     Args:
         id: int id user
         name: str admin name
+        type: str type of user (admin, superadmin, user, block)
     """
-    id = PrimaryKeyField(null=False)
-    name = CharField()
+    __tablename__ = "users"
 
-class BlockUser(BaseModel):
-    """SQL table that contains user than block in telegram
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String, nullable=True)
+    type = mapped_column(String(11), nullable=False)
 
-    Args:
-        id: int id user
-        name: str admin name
-    """
-    id = PrimaryKeyField(null=False)
-    name = CharField()
+    def __repr__(self) -> str:
+        return f"{self.id}: {self.type}, {self.name}"
