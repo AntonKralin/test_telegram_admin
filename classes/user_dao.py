@@ -24,7 +24,7 @@ class UsersDAO(BaseDAO):
         for user in session.scalars(stmt):
             return user
 
-    def find_by_type(self, type_user: str) -> list(Users):
+    def find_by_type(self, type_user: str) -> list:
         """select * from table where 'type'=type"""
         session = self.s_maker()
         stmt = select(Users).where(Users.type == type_user)
