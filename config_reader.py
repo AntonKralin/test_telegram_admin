@@ -18,11 +18,11 @@ try:
     config = dotenv_values(".env")
     if not config.get("BOT_TOKEN"):
         raise ValueNoException("BOT_TOKEN")
-    if not config.get("SuperAdmin"):
-        raise ValueNoException("SuperAdmin")
+    if not config.get("SUPER_ADMIN"):
+        raise ValueNoException("SUPER_ADMIN")
     if not config.get("DB_NAME"):
         config["DB_NAME"] = "sqllite.db"
 except ValueNoException as exc:
     print(exc)
 else:
-    print ("Config load")
+    print("Config load")
