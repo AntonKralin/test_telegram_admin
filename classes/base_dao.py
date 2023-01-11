@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from sqlalchemy.orm import sessionmaker
 
-import config_reader as cr
+from other.logger import get_logger
 
 
 class BaseDAO(ABC):
@@ -14,17 +14,16 @@ class BaseDAO(ABC):
             s_maker: sessionmaker
         """
         self.s_maker = s_maker
-        self.logger = cr.get_logger()
+        self.logger = get_logger()
 
     def insert(self, obj):
         """insert object
         args:
             obj
         """
-        print('start insert')
         session = self.s_maker()
         try:
-            session.add(obj)
+            session.merge(obj)
             session.commit()
         except Exception as e:
             self.logger.error("error insert:" + str(e))
@@ -40,7 +39,7 @@ class BaseDAO(ABC):
         """
         session = self.s_maker()
         try:
-            session.add(obj)
+            session.merge(obj)
             session.commit()
         except Exception as e:
             self.logger.error("error update:" + str(e))

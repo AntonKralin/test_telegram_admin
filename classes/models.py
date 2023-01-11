@@ -15,7 +15,7 @@ class Users(Base):
     """
     __tablename__ = "users"
 
-    id = mapped_column(Integer, primary_key=True)
+    id = mapped_column(Integer, primary_key=True, autoincrement=False)
     name = mapped_column(String, nullable=True)
     type = mapped_column(String(11), nullable=False)
 

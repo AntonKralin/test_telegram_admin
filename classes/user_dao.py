@@ -3,6 +3,7 @@ from sqlalchemy import select
 from classes.models import Users
 from classes.base_dao import BaseDAO
 
+
 class UsersDAO(BaseDAO):
 
     def find_by_id(self, id):
@@ -28,7 +29,7 @@ class UsersDAO(BaseDAO):
         """select * from table where 'type'=type"""
         session = self.s_maker()
         stmt = select(Users).where(Users.type == type_user)
-        l_user = list(Users)
+        l_user = list()
         for user in session.scalars(stmt):
             l_user.insert(user)
         return l_user
