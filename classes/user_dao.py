@@ -31,5 +31,13 @@ class UsersDAO(BaseDAO):
         stmt = select(Users).where(Users.type == type_user)
         l_user = list()
         for user in session.scalars(stmt):
-            l_user.insert(user)
+            l_user.append(user)
         return l_user
+
+    def check_type(self, user_id: int, user_type: str) -> bool:
+        session = self.s_maker
+        l_user = self.find_by_type(user_type)
+        for i_user in l_user:
+            if i_user.id == user_id:
+                return True
+        return False
