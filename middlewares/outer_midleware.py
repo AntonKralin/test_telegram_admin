@@ -9,6 +9,7 @@ from classes.db import get_session
 
 
 class UserCheckBlock(BaseMiddleware):
+    """outer midleware to skip block user"""
     async def __call__(self,
                 handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
                 event: Message,

@@ -2,6 +2,8 @@ from dotenv import dotenv_values
 import logging
 
 from other.logger import get_logger
+
+
 class ValueNoException(Exception):
     """exception class"""
     def __init__(self, *args: object) -> None:

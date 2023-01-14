@@ -8,6 +8,8 @@ from classes.Enums import UserType
 
 
 class UserTypeFilter(Filter):
+    """Filter messages by type user
+    use: @default_router.message(Command("start"), UserTypeFilter(UserType.superadmin.value))"""
     def __init__(self, user_type: UserType):
         self.user_type = user_type
 
