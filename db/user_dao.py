@@ -1,12 +1,12 @@
 from sqlalchemy import select
 
-from classes.models import Users
-from classes.base_dao import BaseDAO
+from db.models import Users
+from db.base_dao import BaseDAO
 
 
 class UsersDAO(BaseDAO):
 
-    def find_by_id(self, id):
+    async def find_by_id(self, id: int):
         """select * from table where id = id
         args:
             id
@@ -18,14 +18,14 @@ class UsersDAO(BaseDAO):
         for user in session.scalars(stmt):
             return user
 
-    def find_all(self):
+    async def find_all(self):
         """abstractmethod select * from table"""
         session = self.s_maker()
         stmt = select(Users)
         for user in session.scalars(stmt):
             return user
 
-    def find_by_type(self, type_user: str) -> list:
+    async def find_by_type(self, type_user: str) -> list:
         """select * from table where 'type'=type
         arg:
             type_user: str type of user UserType
@@ -38,13 +38,12 @@ class UsersDAO(BaseDAO):
             l_user.append(user)
         return l_user
 
-    def check_type(self, user_id: int, user_type: str) -> bool:
+    async def check_type(self, user_id: int, user_type: str) -> bool:
         """check user type
         arg:
             id: int id user
         return:
             bool"""
-        session = self.s_maker
         l_user = self.find_by_type(user_type)
         for i_user in l_user:
             if i_user.id == user_id:

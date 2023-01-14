@@ -1,10 +1,9 @@
 from aiogram.filters import Filter
 from aiogram.types import Message
 
-from classes.user_dao import UsersDAO
-from classes.models import Users
-from classes.db import get_session
-from classes.Enums import UserType
+from db.user_dao import UsersDAO
+from db.db import get_session
+from other.enums import UserType
 
 
 class UserTypeFilter(Filter):

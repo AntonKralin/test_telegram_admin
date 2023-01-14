@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from other.configs import config
-from classes.models import Base
+from db.models import Base
 
 
 engine = create_engine("sqlite:///" + config.get("DB_NAME"))

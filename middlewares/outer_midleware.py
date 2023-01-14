@@ -3,9 +3,9 @@ from aiogram.types import Update, Message
 from typing import Dict, Callable, Any, Awaitable
 
 from other.logger import get_logger
-from classes.user_dao import UsersDAO
-from classes.Enums import UserType
-from classes.db import get_session
+from db.user_dao import UsersDAO
+from other.enums import UserType
+from db.db import get_session
 
 
 class UserCheckBlock(BaseMiddleware):
@@ -15,7 +15,7 @@ class UserCheckBlock(BaseMiddleware):
                 event: Message,
                 data: Dict[str, Any]) -> Any:
         user_dao = UsersDAO(get_session())
-        user_list = user_dao.find_by_type(UserType.block.value)
+        user_list = await user_dao.find_by_type(UserType.block.value)
         for i_user in user_list:
             if i_user.id == event.from_user.id:
                 logger = get_logger()

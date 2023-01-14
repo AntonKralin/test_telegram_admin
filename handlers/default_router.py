@@ -2,11 +2,11 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters.command import Command
 
-from classes.models import Users
+from db.models import Users
 from filters.AdminFilter import UserTypeFilter
-from classes.Enums import UserType
-from classes.db import get_session
-from classes.user_dao import UsersDAO
+from other.enums import UserType
+from db.db import get_session
+from db.user_dao import UsersDAO
 import other.cons as cons
 
 default_router = Router()
@@ -20,7 +20,7 @@ async def superadmin_start(message: Message):
     user.name = message.from_user.username
     user.type = UserType.superadmin.value
     u_dao = UsersDAO(get_session())
-    u_dao.insert(user)
+    await u_dao.insert(user)
     await message.answer("welcome superadmin")
 
 
@@ -32,7 +32,7 @@ async def superadmin_start(message: Message):
     user.name = message.from_user.username
     user.type = UserType.admin.value
     u_dao = UsersDAO(get_session())
-    u_dao.insert(user)
+    await u_dao.insert(user)
     await message.answer("welcome admin")
 
 
@@ -44,7 +44,7 @@ async def user_start(message: Message):
     user.name = message.from_user.username
     user.type = UserType.user.value
     u_dao = UsersDAO(get_session())
-    u_dao.insert(user)
+    await u_dao.insert(user)
     await message.answer("welcome")
 
 

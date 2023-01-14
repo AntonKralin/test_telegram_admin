@@ -16,7 +16,7 @@ class BaseDAO(ABC):
         self.s_maker = s_maker
         self.logger = get_logger()
 
-    def insert(self, obj):
+    async def insert(self, obj):
         """insert object
         args:
             obj
@@ -29,10 +29,10 @@ class BaseDAO(ABC):
             self.logger.error("error insert:" + str(e))
             session.rollback()
         finally:
-            self.logger.info("insert")
+            self.logger.info("insert:" + str(obj))
             session.close()
 
-    def update(self, obj):
+    async def update(self, obj):
         """update object
         args:
             obj
@@ -49,7 +49,7 @@ class BaseDAO(ABC):
             self.logger.info("update")
 
     @abstractmethod
-    def find_by_id(self, id):
+    async def find_by_id(self, id: int):
         """abstractmethod select * from table where id = id
         args:
             id
@@ -57,11 +57,11 @@ class BaseDAO(ABC):
         pass
 
     @abstractmethod
-    def find_all(self):
+    async def find_all(self):
         """abstractmethod select * from table"""
         pass
 
-    def dell(self, obj):
+    async def dell(self, obj):
         """dell object
         args:
             obj
