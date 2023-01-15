@@ -14,7 +14,7 @@ class UserTypeFilter(Filter):
 
     async def __call__(self, message: Message) -> bool:
         user_dao = UsersDAO(get_session())
-        return user_dao.check_type(message.from_user.id, self.user_type)
+        return await user_dao.check_type(message.from_user.id, self.user_type)
 
 
 

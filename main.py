@@ -1,7 +1,8 @@
 from aiogram import Bot, Dispatcher
 import asyncio
-from handlers.default_router import default_router
 
+from handlers.default_router import default_router
+from handlers.superadmin_router import admin_router
 from other.configs import config
 from other.logger import get_logger
 from db.user_dao import UsersDAO
@@ -24,6 +25,7 @@ async def main():
 
     #register routers
     dispatcher.include_router(default_router)
+    dispatcher.include_router(admin_router)
 
     #register midleware
     dispatcher.message.outer_middleware(UserCheckBlock())

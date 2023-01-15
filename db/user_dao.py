@@ -44,7 +44,7 @@ class UsersDAO(BaseDAO):
             id: int id user
         return:
             bool"""
-        l_user = self.find_by_type(user_type)
+        l_user = await self.find_by_type(user_type)
         for i_user in l_user:
             if i_user.id == user_id:
                 return True
