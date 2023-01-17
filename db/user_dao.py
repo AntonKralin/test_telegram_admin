@@ -38,6 +38,22 @@ class UsersDAO(BaseDAO):
             l_user.append(user)
         return l_user
 
+    async def find_by_name(self, name: str) -> Users:
+        """select * from table where `name`=name
+        arg:
+            name: username tg user
+        return:
+            User: class user"""
+        session = self.s_maker()
+        stmt = select(Users).filter(Users.name.ilike(name))
+        l_user = list()
+        for i_user in session.scalars(stmt):
+            l_user.append(i_user)
+        if len(l_user) == 0:
+            return None
+        else:
+            return l_user[0]
+
     async def check_type(self, user_id: int, user_type: str) -> bool:
         """check user type
         arg:

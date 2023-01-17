@@ -11,18 +11,74 @@ from other.logger import get_logger
 admin_router = Router()
 
 
+@admin_router.message(Command("dellsuperadmin"), UserTypeFilter(UserType.superadmin.value))
+async def dell_superadmin(message: Message):
+    entities = message.entities or []
+    for item in entities:
+        if item.type == 'mention':
+            nickname = item.extract_from(message.text)
+            nickname = nickname.replace("@", "")
+            u_dao = UsersDAO(get_session())
+            u_admin = await u_dao.find_by_name(nickname)
+            if u_admin:
+                u_admin.type = UserType.user.value
+                u_dao.update(u_admin)
+                await message.answer(u_admin.name + " remove admin")
+            else:
+                await message.answer("not find user")
+
+
+@admin_router.message(Command("addsuperadmin"), UserTypeFilter(UserType.superadmin.value))
+async def add_superadmin(message: Message):
+    entities = message.entities or []
+    for item in entities:
+        if item.type == 'mention':
+            nickname = item.extract_from(message.text)
+            nickname = nickname.replace("@", "")
+            print(nickname)
+            u_dao = UsersDAO(get_session())
+            u_admin = await u_dao.find_by_name(nickname)
+            if u_admin:
+                u_admin.type = UserType.superadmin.value
+                u_dao.update(u_admin)
+                await message.answer(u_admin.name + " set admin")
+            else:
+                await message.answer("not find user")
+
+
 @admin_router.message(Command("removeadmin"), UserTypeFilter(UserType.superadmin.value))
 async def remove_admin(message: Message):
-    pass
+    entities = message.entities or []
+    for item in entities:
+        if item.type == 'mention':
+            nickname = item.extract_from(message.text)
+            nickname = nickname.replace("@", "")
+            u_dao = UsersDAO(get_session())
+            u_admin = await u_dao.find_by_name(nickname)
+            if u_admin:
+                u_admin.type = UserType.user.value
+                u_dao.update(u_admin)
+                await message.answer(u_admin.name + " remove admin")
+            else:
+                await message.answer("not find user")
 
 
 @admin_router.message(Command("setadmin"), UserTypeFilter(UserType.superadmin.value))
 async def set_admin(message: Message):
     entities = message.entities or []
     for item in entities:
-        print(item)
         if item.type == 'mention':
-            await message.answer(item.extract_from(message.text))
+            nickname = item.extract_from(message.text)
+            nickname = nickname.replace("@", "")
+            print(nickname)
+            u_dao = UsersDAO(get_session())
+            u_admin = await u_dao.find_by_name(nickname)
+            if u_admin:
+                u_admin.type = UserType.admin.value
+                u_dao.update(u_admin)
+                await message.answer(u_admin.name + " set admin")
+            else:
+                await message.answer("not find user")
 
 
 @admin_router.message(Command("adminlist"), UserTypeFilter(UserType.superadmin.value))
