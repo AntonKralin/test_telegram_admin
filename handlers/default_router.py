@@ -3,7 +3,7 @@ from aiogram.types import Message
 from aiogram.filters.command import Command
 
 from db.models import Users
-from filters.AdminFilter import UserTypeFilter
+from filters.admin_filter import UserTypeFilter
 from other.enums import UserType
 from db.db import get_session
 from db.user_dao import UsersDAO

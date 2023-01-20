@@ -3,16 +3,17 @@ from aiogram.types import Message
 from aiogram.filters.command import Command
 
 from other.enums import UserType
-from filters.AdminFilter import UserTypeFilter
+from filters.admin_filter import UserTypeFilter
 from db.db import get_session
 from db.user_dao import UsersDAO
 from other.logger import get_logger
 
-admin_router = Router()
+superadmin_router = Router()
 
 
-@admin_router.message(Command("dellsuperadmin"), UserTypeFilter(UserType.superadmin.value))
+@superadmin_router.message(Command("dellsuperadmin"), UserTypeFilter(UserType.superadmin.value))
 async def dell_superadmin(message: Message):
+    logger = get_logger()
     entities = message.entities or []
     for item in entities:
         if item.type == 'mention':
@@ -22,14 +23,16 @@ async def dell_superadmin(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.user.value
-                u_dao.update(u_admin)
+                u_dao.update(u_admin.name + " remove admin")
+                logger.info("adminlist")
                 await message.answer(u_admin.name + " remove admin")
             else:
                 await message.answer("not find user")
 
 
-@admin_router.message(Command("addsuperadmin"), UserTypeFilter(UserType.superadmin.value))
+@superadmin_router.message(Command("addsuperadmin"), UserTypeFilter(UserType.superadmin.value))
 async def add_superadmin(message: Message):
+    logger = get_logger()
     entities = message.entities or []
     for item in entities:
         if item.type == 'mention':
@@ -41,13 +44,15 @@ async def add_superadmin(message: Message):
             if u_admin:
                 u_admin.type = UserType.superadmin.value
                 u_dao.update(u_admin)
+                logger.info(u_admin.name + " set admin")
                 await message.answer(u_admin.name + " set admin")
             else:
                 await message.answer("not find user")
 
 
-@admin_router.message(Command("removeadmin"), UserTypeFilter(UserType.superadmin.value))
+@superadmin_router.message(Command("removeadmin"), UserTypeFilter(UserType.superadmin.value))
 async def remove_admin(message: Message):
+    logger = get_logger()
     entities = message.entities or []
     for item in entities:
         if item.type == 'mention':
@@ -58,30 +63,32 @@ async def remove_admin(message: Message):
             if u_admin:
                 u_admin.type = UserType.user.value
                 u_dao.update(u_admin)
+                logger.info(u_admin.name + " remove admin")
                 await message.answer(u_admin.name + " remove admin")
             else:
                 await message.answer("not find user")
 
 
-@admin_router.message(Command("setadmin"), UserTypeFilter(UserType.superadmin.value))
+@superadmin_router.message(Command("setadmin"), UserTypeFilter(UserType.superadmin.value))
 async def set_admin(message: Message):
+    logger = get_logger()
     entities = message.entities or []
     for item in entities:
         if item.type == 'mention':
             nickname = item.extract_from(message.text)
             nickname = nickname.replace("@", "")
-            print(nickname)
             u_dao = UsersDAO(get_session())
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.admin.value
                 u_dao.update(u_admin)
+                logger.info(u_admin.name + " set admin")
                 await message.answer(u_admin.name + " set admin")
             else:
                 await message.answer("not find user")
 
 
-@admin_router.message(Command("adminlist"), UserTypeFilter(UserType.superadmin.value))
+@superadmin_router.message(Command("adminlist"), UserTypeFilter(UserType.superadmin.value))
 async def admin_list(message: Message):
     logger = get_logger()
     logger.info("adminlist")
@@ -95,7 +102,7 @@ async def admin_list(message: Message):
     await message.answer(s_user)
 
 
-@admin_router.message(Command("superadminlist"), UserTypeFilter(UserType.superadmin.value))
+@superadmin_router.message(Command("superadminlist"), UserTypeFilter(UserType.superadmin.value))
 async def superadmin_list(message: Message):
     logger = get_logger()
     logger.info("superadminlist")

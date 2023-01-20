@@ -1,8 +1,10 @@
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 import asyncio
 
 from handlers.default_router import default_router
-from handlers.superadmin_router import admin_router
+from handlers.superadmin_router import superadmin_router
+from handlers.admin_router import admin_router
 from other.configs import config
 from other.logger import get_logger
 from db.user_dao import UsersDAO
@@ -15,7 +17,7 @@ import db.db as db
 async def main():
     """Start bot"""
     bot = Bot(token=config.get("BOT_TOKEN"))
-    dispatcher = Dispatcher()
+    dispatcher = Dispatcher(storage=MemoryStorage())
 
     id_super = config.get("SUPER_ADMIN")
     superadmin = Users(id=id_super, type=UserType.superadmin.value)
@@ -25,6 +27,7 @@ async def main():
 
     #register routers
     dispatcher.include_router(default_router)
+    dispatcher.include_router(superadmin_router)
     dispatcher.include_router(admin_router)
 
     #register midleware
