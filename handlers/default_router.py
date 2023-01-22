@@ -69,9 +69,20 @@ async def admin_help(message: Message):
 
 
 @default_router.message(Command("help"))
-async def help(message: Message):
+async def user_help(message: Message):
     """Command help for users"""
     answer = "1"
     for i_command in cons.user_command:
         answer += i_command + "\n"
     await message.answer(answer, parse_mode="HTML")
+
+
+@default_router.message(Command("quit"))
+async def quit_bot(message: Message):
+    u_dao = UsersDAO(get_session())
+    user = await u_dao.find_by_id(message.from_user.id)
+    if user:
+        await u_dao.dell(user)
+        await message.answer("Вы были удалены")
+    else:
+        await message.answer("Вас не в базе")
