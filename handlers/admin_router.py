@@ -87,6 +87,18 @@ async def user_list(message: Message):
     await message.answer(s_user)
 
 
+@admin_router.message(Command("blocklist"), AdminsTypeFiler())
+async def block_list(message: Message):
+    u_dao = UsersDAO(get_session())
+    u_list = await u_dao.find_by_type(UserType.block.value)
+    u_list.append(u_list[0])
+    s_user = ""
+    for i_user in u_list:
+        s_user = ",@".join([s_user, i_user.name])
+    s_user = s_user[1:len(s_user)]
+    await message.answer(s_user)
+
+
 @admin_router.message(Command("sendall"), AdminsTypeFiler())
 async def send_all(message: Message, state: FSMContext):
     await message.answer("Введите сообщение:")
