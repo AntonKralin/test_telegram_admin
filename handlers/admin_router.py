@@ -17,6 +17,10 @@ class SendState(StatesGroup):
     set_users = State()
 
 
+class SendAllState(StatesGroup):
+    send_message = State()
+
+
 admin_router = Router()
 
 
@@ -73,15 +77,30 @@ async def user_list(message: Message):
     u_list = await u_dao.find_by_type(UserType.user.value)
     u_list.append(u_list[0])
     s_user = ""
+    i = 0
     for i_user in u_list:
+        i += 1
         s_user = ",@".join([s_user, i_user.name])
+        if i % 10 == 0:
+            s_user += "\n"
     s_user = s_user[1:len(s_user)]
     await message.answer(s_user)
 
 
 @admin_router.message(Command("sendall"), AdminsTypeFiler())
-async def send_all(message: Message):
-    pass
+async def send_all(message: Message, state: FSMContext):
+    await message.answer("Введите сообщение:")
+    await state.set_state(SendAllState.send_message)
+
+
+@admin_router.message(SendAllState.send_message)
+async def get_all_message(message: Message, bot: Bot, state: FSMContext):
+    u_dao = UsersDAO(get_session())
+    u_list = await u_dao.find_by_type(UserType.user.value)
+    for i_user in u_list:
+        await bot.send_message(i_user.id, message.html_text, parse_mode="HTML")
+    await message.answer(f"Отправлено {len(u_list)} сообщений")
+    await state.clear()
 
 
 @admin_router.message(Command("senduser"), AdminsTypeFiler())
@@ -112,7 +131,7 @@ async def get_message(message: Message, bot: Bot, state: FSMContext):
     for i_user in u_list:
         user = await user_dao.find_by_name(i_user)
         if user:
-            await bot.send_message(user.id, message.text)
+            await bot.send_message(user.id, message.html_text, parse_mode="HTML")
         else:
             wrong_user = " ".join([wrong_user, i_user])
     await message.answer(f"не отправлено: {wrong_user}")
