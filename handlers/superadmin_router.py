@@ -23,7 +23,7 @@ async def dell_superadmin(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.user.value
-                u_dao.update(u_admin.name + " remove admin")
+                await u_dao.update(u_admin.name + " remove admin")
                 logger.info("adminlist")
                 await message.answer(u_admin.name + " remove admin")
             else:
@@ -43,7 +43,7 @@ async def add_superadmin(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.superadmin.value
-                u_dao.update(u_admin)
+                await u_dao.update(u_admin)
                 logger.info(u_admin.name + " set admin")
                 await message.answer(u_admin.name + " set admin")
             else:
@@ -62,7 +62,7 @@ async def remove_admin(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.user.value
-                u_dao.update(u_admin)
+                await u_dao.update(u_admin)
                 logger.info(u_admin.name + " remove admin")
                 await message.answer(u_admin.name + " remove admin")
             else:
@@ -81,7 +81,7 @@ async def set_admin(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.admin.value
-                u_dao.update(u_admin)
+                await u_dao.update(u_admin)
                 logger.info(u_admin.name + " set admin")
                 await message.answer(u_admin.name + " set admin")
             else:

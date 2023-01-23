@@ -43,7 +43,7 @@ async def block_user(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.block.value
-                u_dao.update(u_admin)
+                await u_dao.update(u_admin)
                 logger.info(u_admin.name + " block")
                 await message.answer(u_admin.name + " block")
             else:
@@ -62,7 +62,7 @@ async def unblock_user(message: Message):
             u_admin = await u_dao.find_by_name(nickname)
             if u_admin:
                 u_admin.type = UserType.user.value
-                u_dao.update(u_admin)
+                await u_dao.update(u_admin)
                 logger.info(u_admin.name + " unblock")
                 await message.answer(u_admin.name + " unblock")
             else:
